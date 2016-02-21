@@ -1,0 +1,19 @@
+{
+  "name": "sainsburys-gol-api",
+  "version": "0.0.1",
+  "description": "prototype api service for gol",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Dan Osborne",
+  "license": "ISC",
+  "dependencies": {
+    "cheerio": "^0.20.0",
+    "curlrequest": "^0.5.6",
+    "express": "^4.13.4",
+    "jsdom": "^8.0.4",
+    "mongoose": "^4.4.4",
+    "request": "^2.69.0"
+  }
+}
