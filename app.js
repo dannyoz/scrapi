@@ -5,6 +5,11 @@ const curl      = require('curlrequest');
 const jsdom     = require("jsdom");
 const cheerio   = require('cheerio');
 
+var path         = require('path')
+var childProcess = require('child_process')
+var phantomjs    = require('phantomjs')
+var binPath      = phantomjs.path
+var scraperjs    = require('scraperjs');
 
 const app    = express();
 const port   = 3000;
@@ -56,6 +61,46 @@ app.get('/test', (req, res) => {
 
 });
 
+app.get('/navigation', (req,res) =>{
+
+	console.log('navigation');
+
+	scraperjs.DynamicScraper.create('https://news.ycombinator.com/')
+		.scrape(function($) {
+			return $(".title a").map(function() {
+				return $(this).text();
+			}).get();
+		})
+		.then(function(news) {
+			console.log(news);
+		})
+
+	res.send({
+    	data : true
+    });
+
+});
+
+app.get('/example', (req, res) =>{
+
+	console.log('example');
+
+	var childArgs = [
+	  path.join(__dirname, 'phantom-script.js'),
+	  'some other argument (passed to phantomjs script)'
+	];
+	 
+	childProcess.execFile(binPath, childArgs, function(err, stdout, stderr) {
+	  // handle results
+	  console.log(err, stdout, stderr);
+	});
+
+	res.send({
+		example : true
+	});
+
+});
+
 
 let request = (url) =>{
 
@@ -63,15 +108,10 @@ let request = (url) =>{
 
 	var options = {
         url : url,
-        method : 'get',
-        encoding : 'ascii',
-        verbose: true,
-        headers : {
-        	'Set-Cookie' : "sbrycookie1=630263751"
-        }
+        method : 'get'
     };
 
-    let Prom1$e = new Promise((resolve,reject) =>{
+    let ajaxPromise = new Promise((resolve,reject) =>{
 
     	 curl.request(options,(err,response) => {
 
@@ -84,7 +124,7 @@ let request = (url) =>{
 
     });
 
-    return Prom1$e;
+    return ajaxPromise;
 
 };
 
